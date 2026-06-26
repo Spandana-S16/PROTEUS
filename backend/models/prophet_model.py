@@ -71,20 +71,44 @@ class ProphetModel:
 
         return forecast.iloc[-1]["yhat"]
 
-    def predict_test(self, test_df):
+    def predict_test(self, train_df, test_df):
 
-        future = test_df[["Date"]].copy()
+        predictions = []
 
-        future.rename(
-            columns={
-                "Date": "ds"
-            },
-            inplace=True
-        )
+        stores = sorted(test_df["Store"].unique())
 
-        forecast = self.model.predict(future)
+        for store in stores:
 
-        return forecast["yhat"].values
+            print(f"Prophet -> Store {store}")
+
+            train_store = train_df[
+                train_df["Store"] == store
+            ].copy()
+
+            test_store = test_df[
+                test_df["Store"] == store
+            ].copy()
+
+            if len(train_store) == 0 or len(test_store) == 0:
+                continue
+
+            prophet_df = self.prepare_data(train_store)
+
+            model = Prophet()
+
+            model.fit(prophet_df)
+
+            future = pd.DataFrame({
+                "ds": test_store["Date"]
+            })
+
+            forecast = model.predict(future)
+
+            predictions.extend(
+                forecast["yhat"].values
+            )
+
+        return predictions
 
 
 if __name__ == "__main__":

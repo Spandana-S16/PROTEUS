@@ -1,0 +1,16 @@
+Scenario,Model,MAE
+Normal,Prophet_Prediction,403867.41
+Normal,XGB_Prediction,470513.44
+Normal,LSTM_Prediction,426484.48
+Normal,Fixed_Fusion,357347.19
+Normal,Adaptive_Fusion,356964.62
+Demand Spike (+30%),Prophet_Prediction,431519.3
+Demand Spike (+30%),XGB_Prediction,566658.1
+Demand Spike (+30%),LSTM_Prediction,522487.15
+Demand Spike (+30%),Fixed_Fusion,414199.95
+Demand Spike (+30%),Adaptive_Fusion,411870.56
+Demand Crash (-20%),Prophet_Prediction,472187.2
+Demand Crash (-20%),XGB_Prediction,438378.7
+Demand Crash (-20%),LSTM_Prediction,403796.91
+Demand Crash (-20%),Fixed_Fusion,392608.28
+Demand Crash (-20%),Adaptive_Fusion,395243.8
