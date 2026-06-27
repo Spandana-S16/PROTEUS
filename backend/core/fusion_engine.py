@@ -34,30 +34,27 @@ class FusionEngine:
 
         total = sum(weights.values())
 
-        return {
-            k: v / total
-            for k, v in weights.items()
-        }
+        return {k: v / total for k, v in weights.items()}
 
     def combine(
+
         self,
+
         prophet_result,
+
         xgb_result,
+
         lstm_result,
+
         regime
+
     ):
 
         priors = self.regime_priors[regime]
 
-        # -------------------------
-        # Performance Scores
-        # -------------------------
-
-        prophet_perf = 1 / prophet_result["mae"]
-
-        xgb_perf = 1 / xgb_result["mae"]
-
-        lstm_perf = 1 / lstm_result["mae"]
+        prophet_perf = 1 / (prophet_result["mae"] + 1e-6)
+        xgb_perf = 1 / (xgb_result["mae"] + 1e-6)
+        lstm_perf = 1 / (lstm_result["mae"] + 1e-6)
 
         performance_scores = {
 
@@ -73,10 +70,6 @@ class FusionEngine:
             performance_scores
         )
 
-        # -------------------------
-        # Adaptive Weights
-        # -------------------------
-
         final_weights = {}
 
         for model in priors:
@@ -91,57 +84,41 @@ class FusionEngine:
 
             )
 
-            final_weights = self.normalize(
-                final_weights
-            )
-
-        # -------------------------
-        # Final Forecast
-        # -------------------------
+        final_weights = self.normalize(
+            final_weights
+        )
 
         forecast = (
 
-            prophet_result["prediction"]
-
-            * final_weights["Prophet"]
+            prophet_result["prediction"] * final_weights["Prophet"]
 
             +
 
-            xgb_result["prediction"]
-
-            * final_weights["XGBoost"]
+            xgb_result["prediction"] * final_weights["XGBoost"]
 
             +
 
-            lstm_result["prediction"]
-
-            * final_weights["LSTM"]
+            lstm_result["prediction"] * final_weights["LSTM"]
 
         )
 
-        ensemble_confidence = (
+        confidence = (
 
-            prophet_result["confidence"]
-
-            * final_weights["Prophet"]
+            prophet_result["confidence"] * final_weights["Prophet"]
 
             +
 
-            xgb_result["confidence"]
-
-            * final_weights["XGBoost"]
+            xgb_result["confidence"] * final_weights["XGBoost"]
 
             +
 
-            lstm_result["confidence"]
-
-            * final_weights["LSTM"]
+            lstm_result["confidence"] * final_weights["LSTM"]
 
         )
 
         return {
 
-            "forecast": round(forecast, 2),
+            "forecast": round(float(forecast), 2),
 
             "weights": {
 
@@ -151,9 +128,6 @@ class FusionEngine:
 
             },
 
-            "ensemble_confidence": round(
-                ensemble_confidence,
-                2
-            )
+            "ensemble_confidence": round(float(confidence), 2)
 
         }

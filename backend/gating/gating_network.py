@@ -12,7 +12,7 @@ class GatingNetwork:
             Dense(
                 32,
                 activation="relu",
-                input_shape=(11,)
+                input_shape=(12,)
             ),
 
             Dropout(0.2),
@@ -33,7 +33,7 @@ class GatingNetwork:
 
             optimizer="adam",
 
-            loss="mse",
+            loss=tf.keras.losses.KLDivergence(),
 
             metrics=["mae"]
 

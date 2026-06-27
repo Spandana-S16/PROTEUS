@@ -74,7 +74,8 @@ X = df[
         "Month",
         "Quarter",
         "Prophet_Prediction",
-        "XGB_Prediction"
+        "XGB_Prediction",
+        "LSTM_Prediction"
     ]
 ]
 

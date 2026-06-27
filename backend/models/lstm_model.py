@@ -213,11 +213,11 @@ class LSTMModel:
 
         return {
 
-            "MAE": round(mae,2),
+            "MAE": round(float(mae),2),
 
-            "RMSE": round(rmse,2),
+            "RMSE": round(float(rmse),2),
 
-            "MAPE": round(mape,2)
+            "MAPE": round(float(mape),2)
 
         }
 
@@ -226,16 +226,13 @@ if __name__ == "__main__":
 
     df = pd.read_csv(
 
-        "data/Walmart_Sales.csv"
+        "data/DataCo_Weekly.csv"
 
     )
 
     df["Date"] = pd.to_datetime(
 
-        df["Date"],
-
-        dayfirst=True
-
+        df["Date"]
     )
 
     model = LSTMModel()

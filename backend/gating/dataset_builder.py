@@ -10,11 +10,12 @@ class GatingDatasetBuilder:
 
     def load_data(self):
 
-        df = pd.read_csv("data/Walmart_Sales.csv")
+        df = pd.read_csv(
+            "data/DataCo_Weekly.csv"
+        )
 
         df["Date"] = pd.to_datetime(
-            df["Date"],
-            dayfirst=True
+            df["Date"]
         )
 
         return df
@@ -23,10 +24,8 @@ class GatingDatasetBuilder:
 
         df = self.load_data()
 
-        # Feature Engineering
         df = engineer_features(df)
 
-        # Context features for gating network
         context = df[
             [
                 "Date",
@@ -44,7 +43,6 @@ class GatingDatasetBuilder:
             ]
         ].copy()
 
-        # Remove rows where rolling features are NaN
         context.dropna(inplace=True)
 
         return context
@@ -54,8 +52,11 @@ class GatingDatasetBuilder:
         dataset = self.prepare_dataset()
 
         dataset.to_csv(
-            "gating_dataset.csv",
+
+            "backend/gating/gating_dataset.csv",
+
             index=False
+
         )
 
         print("\nDataset Created Successfully!")

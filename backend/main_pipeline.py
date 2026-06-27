@@ -25,12 +25,10 @@ def run_pipeline():
     # Load Data
     # =====================================================
 
-    df = pd.read_csv("data/Walmart_Sales.csv")
+    df = pd.read_csv("data/DataCo_Weekly.csv")
 
     df["Date"] = pd.to_datetime(
-        df["Date"],
-        dayfirst=True
-    )
+        df["Date"])
 
     df = engineer_features(df)
 

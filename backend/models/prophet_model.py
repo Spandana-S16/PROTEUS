@@ -146,31 +146,33 @@ class ProphetModel:
 
         return {
 
-            "MAE": round(mae,2),
+            "MAE": round(float(mae),2),
 
-            "RMSE": round(rmse,2),
+            "RMSE": round(float(rmse),2),
 
-            "MAPE": round(mape,2)
+            "MAPE": round(float(mape),2)
 
         }
 
 
 if __name__ == "__main__":
 
-    df = pd.read_csv("../data/Walmart_Sales.csv")
+    df = pd.read_csv("data/DataCo_Weekly.csv")
 
     df["Date"] = pd.to_datetime(
-        df["Date"],
-        dayfirst=True
+        df["Date"]
     )
-
-    store1 = df[df["Store"] == 1]
 
     model = ProphetModel()
 
-    model.train(store1)
+    model.train(df)
 
-    prediction = model.latest_prediction()
+    print("\n========== PROPHET ==========")
 
-    print("\nLatest Prophet Prediction")
-    print(prediction)
+    print("\nMetrics")
+
+    print(model.evaluate(df))
+
+    print("\nLatest Prediction")
+
+    print(round(model.latest_prediction(),2))

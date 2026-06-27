@@ -27,12 +27,11 @@ X = df[
         "Month",
         "Quarter",
         "Prophet_Prediction",
-        "XGB_Prediction"
+        "XGB_Prediction",
+        "LSTM_Prediction"
     ]
 ]
 
-# We'll add LSTM prediction in the next iteration.
-# Keeping the input size small while we verify the pipeline.
 
 # ======================================
 # Generate Learning Targets

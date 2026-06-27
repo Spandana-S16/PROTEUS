@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_absolute_error
+import joblib
+from keras.models import load_model
 
 print("=" * 60)
 print("ROBUSTNESS TEST")
@@ -17,14 +19,58 @@ df = pd.read_csv("backend/gating/gating_dataset.csv")
 # ==========================================
 
 df["Fixed_Fusion"] = (
-    0.6 * df["Prophet_Prediction"] +
-    0.4 * df["XGB_Prediction"]
+    0.6 * df["XGB_Prediction"] +
+    0.4 * df["LSTM_Prediction"]
+)
+
+# ============================================
+# Load Trained Gating Network
+# ============================================
+
+gating_model = load_model(
+    "backend/gating/gating_model.keras"
+)
+
+scaler = joblib.load(
+    "backend/gating/scaler.pkl"
+)
+
+features = df[
+    [
+        "Rolling_CV",
+        "Demand_Growth",
+        "Demand_Momentum",
+        "Fuel_Change",
+        "CPI_Change",
+        "Unemployment_Change",
+        "Holiday_Flag",
+        "Month",
+        "Quarter",
+        "Prophet_Prediction",
+        "XGB_Prediction",
+        "LSTM_Prediction"
+    ]
+]
+
+features = scaler.transform(features)
+
+weights = gating_model.predict(
+    features,
+    verbose=0
 )
 
 df["Adaptive_Fusion"] = (
-    0.56 * df["Prophet_Prediction"] +
-    0.20 * df["XGB_Prediction"] +
-    0.24 * df["LSTM_Prediction"]
+
+    weights[:,0] * df["Prophet_Prediction"]
+
+    +
+
+    weights[:,1] * df["XGB_Prediction"]
+
+    +
+
+    weights[:,2] * df["LSTM_Prediction"]
+
 )
 
 # ==========================================

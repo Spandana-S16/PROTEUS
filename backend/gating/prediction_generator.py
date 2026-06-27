@@ -13,12 +13,10 @@ print("=" * 60)
 # Load Dataset
 # ==========================================================
 
-df = pd.read_csv("data/Walmart_Sales.csv")
+df = pd.read_csv("data/DataCo_Weekly.csv")
 
 df["Date"] = pd.to_datetime(
-    df["Date"],
-    dayfirst=True
-)
+    df["Date"])
 
 # Feature Engineering
 df = engineer_features(df)
