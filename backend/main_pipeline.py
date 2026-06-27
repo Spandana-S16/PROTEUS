@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from backend.utils.feature_engineering import engineer_features
 
@@ -15,6 +16,8 @@ from backend.models.xgboost_model import XGBoostModel
 from backend.models.lstm_model import LSTMModel
 
 from backend.utils.confidence import calculate_confidence
+
+from backend.ai.gemini_copilot import GeminiCopilot
 
 
 def run_pipeline():
@@ -185,6 +188,23 @@ def run_pipeline():
         fusion
 
     )
+    copilot = GeminiCopilot(
+
+        api_key=os.getenv("GEMINI_API_KEY")
+
+    )
+
+    ai_report = copilot.explain(
+
+        stability,
+
+        decision,
+
+        fusion,
+
+        recommendations
+
+    )
 
     return {
 
@@ -194,7 +214,9 @@ def run_pipeline():
 
         "fusion": fusion,
 
-        "recommendation": recommendations
+        "recommendation": recommendations,
+
+        "ai executive report": ai_report
 
     }
 
