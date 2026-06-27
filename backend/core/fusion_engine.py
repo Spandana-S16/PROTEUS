@@ -83,17 +83,17 @@ class FusionEngine:
 
             final_weights[model] = (
 
-                priors[model]
+                0.6 * priors[model]
 
-                *
+                +
 
-                performance_scores[model]
+                0.4 * performance_scores[model]
 
             )
 
-        final_weights = self.normalize(
-            final_weights
-        )
+            final_weights = self.normalize(
+                final_weights
+            )
 
         # -------------------------
         # Final Forecast

@@ -10,6 +10,7 @@ from keras.callbacks import EarlyStopping
 
 from backend.utils.feature_engineering import engineer_features
 
+from sklearn.metrics import mean_absolute_percentage_error
 
 class LSTMModel:
 
@@ -202,11 +203,21 @@ class LSTMModel:
 
         )
 
+        mape = mean_absolute_percentage_error(
+
+            actual,
+
+            predictions
+
+        ) * 100
+
         return {
 
             "MAE": round(mae,2),
 
-            "RMSE": round(rmse,2)
+            "RMSE": round(rmse,2),
+
+            "MAPE": round(mape,2)
 
         }
 

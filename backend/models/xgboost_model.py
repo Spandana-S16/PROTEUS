@@ -4,7 +4,8 @@ from xgboost import XGBRegressor
 
 from sklearn.metrics import (
     mean_absolute_error,
-    mean_squared_error
+    mean_squared_error,
+    mean_absolute_percentage_error
 )
 
 from sklearn.model_selection import train_test_split
@@ -167,11 +168,21 @@ class XGBoostModel:
 
         ) ** 0.5
 
+        mape = mean_absolute_percentage_error(
+
+            self.y_test,
+
+            predictions
+
+        ) * 100
+
         return {
 
             "MAE": round(mae, 2),
 
-            "RMSE": round(rmse, 2)
+            "RMSE": round(rmse, 2),
+
+            "MAPE": round(mape, 2)
 
         }
 

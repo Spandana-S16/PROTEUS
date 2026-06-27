@@ -1,21 +1,28 @@
 import pandas as pd
 
-from utils.feature_engineering import engineer_features
+from backend.utils.feature_engineering import engineer_features
 
-from core.stability_analyzer import StabilityAnalyzer
+from backend.core.stability_analyzer import StabilityAnalyzer
 
-from core.regime_detector import RegimeDetector
+from backend.core.regime_detector import RegimeDetector
 
-from core.fusion_engine import FusionEngine
+from backend.core.fusion_engine import FusionEngine
 
-from core.recommendation_engine import RecommendationEngine
+from backend.core.recommendation_engine import RecommendationEngine
+
+from backend.models.prophet_model import ProphetModel
+from backend.models.xgboost_model import XGBoostModel
+from backend.models.lstm_model import LSTMModel
+
+from backend.utils.confidence import calculate_confidence
+
 
 def run_pipeline():
     # =====================================================
     # Load Data
     # =====================================================
 
-    df = pd.read_csv("../data/Walmart_Sales.csv")
+    df = pd.read_csv("data/Walmart_Sales.csv")
 
     df["Date"] = pd.to_datetime(
         df["Date"],
@@ -47,39 +54,108 @@ def run_pipeline():
     )
 
 # =====================================================
-# Mock Model Outputs
+# Real Model Predictions
 # =====================================================
+
+
+
+# -------------------------
+# Prophet
+# -------------------------
+
+    prophet = ProphetModel()
+
+    prophet.train(df)
+
+    prophet_metrics = prophet.evaluate(df)
+
+    prophet_confidence = calculate_confidence(
+
+        prophet_metrics["MAE"],
+
+        prophet_metrics["RMSE"],
+
+        prophet_metrics["MAPE"],
+
+        stability["overall"]["score"]
+
+    )
 
     prophet_result = {
 
-        "prediction": 1720000,
+        "prediction": prophet.latest_prediction(),
 
-        "confidence": 94,
+        "confidence": round(prophet_confidence, 2),
 
-        "mae": 24000
+        "mae": prophet_metrics["MAE"]
 
     }
+
+
+# -------------------------
+# XGBoost
+# -------------------------
+
+    xgb = XGBoostModel()
+
+    xgb.train(df)
+
+    xgb_metrics = xgb.evaluate()
+
+    xgb_confidence = calculate_confidence(
+
+        xgb_metrics["MAE"],
+
+        xgb_metrics["RMSE"],
+
+        xgb_metrics["MAPE"],
+
+        stability["overall"]["score"]
+
+    )
 
     xgb_result = {
 
-        "prediction": 1695000,
+        "prediction": xgb.latest_prediction(),
 
-        "confidence": 91,
+        "confidence": round(xgb_confidence, 2),
 
-        "mae": 18000
+        "mae": xgb_metrics["MAE"]
 
     }
+
+
+# -------------------------
+# LSTM
+# -------------------------
+
+    lstm = LSTMModel()
+
+    lstm.train(df)
+
+    lstm_metrics = lstm.evaluate()
+
+    lstm_confidence = calculate_confidence(
+
+        lstm_metrics["MAE"],
+
+        lstm_metrics["RMSE"],
+
+        lstm_metrics["MAPE"],
+
+        stability["overall"]["score"]
+
+    )
 
     lstm_result = {
 
-        "prediction": 1713000,
+        "prediction": lstm.latest_prediction(),
 
-        "confidence": 89,
+        "confidence": round(lstm_confidence, 2),
 
-        "mae": 21000
+        "mae": lstm_metrics["MAE"]
 
     }
-
 # =====================================================
 # Fusion
 # =====================================================

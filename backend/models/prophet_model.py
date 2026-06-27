@@ -1,6 +1,8 @@
 import pandas as pd
 from prophet import Prophet
-
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
+from sklearn.metrics import mean_absolute_percentage_error
 
 class ProphetModel:
 
@@ -109,6 +111,48 @@ class ProphetModel:
             )
 
         return predictions
+    
+    def evaluate(self, df):
+
+        if not self.is_trained:
+            raise Exception("Model has not been trained.")
+
+        prophet_df = self.prepare_data(df)
+
+        predictions = self.model.predict(
+            prophet_df[["ds"]]
+        )
+
+        actual = prophet_df["y"].values
+
+        predicted = predictions["yhat"].values
+
+        mae = mean_absolute_error(
+            actual,
+            predicted
+        )
+
+        rmse = np.sqrt(
+            mean_squared_error(
+                actual,
+                predicted
+            )
+        )
+
+        mape = mean_absolute_percentage_error(
+            actual,
+            predicted
+        ) * 100
+
+        return {
+
+            "MAE": round(mae,2),
+
+            "RMSE": round(rmse,2),
+
+            "MAPE": round(mape,2)
+
+        }
 
 
 if __name__ == "__main__":
