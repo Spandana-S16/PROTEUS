@@ -1,27 +1,89 @@
 function MetricCard({ title, value }) {
+
+  let color = "#60A5FA";
+
+  if (title === "Resilience Score") {
+
+    const score = parseFloat(value);
+
+    if (score >= 75) {
+      color = "#22C55E";
+    } else if (score >= 40) {
+      color = "#F59E0B";
+    } else {
+      color = "#EF4444";
+    }
+
+  } else if (title === "Confidence") {
+
+    const score = parseFloat(value);
+
+    if (score >= 70) {
+      color = "#22C55E";
+    } else if (score >= 40) {
+      color = "#F59E0B";
+    } else {
+      color = "#EF4444";
+    }
+
+  } else {
+
+    switch (value) {
+
+      case "Stable":
+      case "Excellent":
+        color = "#22C55E";
+        break;
+
+      case "Seasonal":
+      case "Moderate":
+        color = "#F59E0B";
+        break;
+
+      case "Transitional":
+        color = "#F97316";
+        break;
+
+      case "Disrupted":
+      case "High":
+        color = "#EF4444";
+        break;
+
+      default:
+        color = "#60A5FA";
+    }
+  }
+
   return (
     <div
       style={{
         background: "#111827",
         padding: "24px",
-        borderRadius: "16px",
-        minHeight: "120px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        borderRadius: "18px",
+        minHeight: "130px",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
+        border: `2px solid ${color}`,
+        transition: "all 0.3s ease",
+        cursor: "pointer",
       }}
     >
-      <h3
+      <p
         style={{
           color: "#9CA3AF",
-          marginBottom: "12px",
           fontSize: "14px",
+          marginBottom: "18px",
+          fontWeight: 500,
         }}
       >
         {title}
-      </h3>
+      </p>
 
       <h1
         style={{
-          fontSize: "32px",
+          fontSize: "36px",
+          margin: 0,
+          color: color,
+          fontWeight: 700,
         }}
       >
         {value}

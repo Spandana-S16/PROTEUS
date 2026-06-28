@@ -7,7 +7,7 @@ from backend.core.stability_analyzer import StabilityAnalyzer
 
 from backend.core.regime_detector import RegimeDetector
 
-from backend.core.fusion_engine import FusionEngine
+from backend.gating.adaptive_fusion import AdaptiveFusion
 
 from backend.core.recommendation_engine import RecommendationEngine
 
@@ -161,20 +161,49 @@ def run_pipeline():
 # Fusion
 # =====================================================
 
-    engine = FusionEngine()
+    engine = AdaptiveFusion()
+    latest_row = df.iloc[-1]
+    features = [
 
-    fusion = engine.combine(
+        stability["diagnostics"]["Rolling_CV"],
 
-        prophet_result,
+        stability["diagnostics"]["Demand_Growth_STD"],
 
-        xgb_result,
+        0,
 
-        lstm_result,
+        stability["diagnostics"]["Fuel_Change"],
 
-        decision["regime"]
+        stability["diagnostics"]["CPI_Change"],
+
+        stability["diagnostics"]["Unemployment_Change"],
+
+        latest_row["Holiday_Flag"],
+
+        latest_row["Month"],
+
+        latest_row["Quarter"],
+
+        prophet_result["prediction"],
+
+        xgb_result["prediction"],
+
+        lstm_result["prediction"]
+
+    ]
+
+    fusion = engine.fuse(
+
+        features,
+
+        prophet_result["prediction"],
+
+        xgb_result["prediction"],
+
+        lstm_result["prediction"]
 
     )
 
+    
     recommender = RecommendationEngine()
 
     recommendations = recommender.generate(
@@ -188,8 +217,7 @@ def run_pipeline():
     )
     copilot = GeminiCopilot(
 
-        api_key=os.getenv("GEMINI_API_KEY")
-
+        api_key="AQ.Ab8RN6KvKuqW9UtuW030FBrPkVM_-DI_jcEuejs37pO3NwLFFg"
     )
 
     ai_report = copilot.explain(

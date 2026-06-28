@@ -36,11 +36,11 @@ scaler = joblib.load(
 
 df["Fixed_Fusion"] = (
 
-    0.6 * df["Prophet_Prediction"]
+    0.6 * df["XGB_Prediction"]
 
     +
 
-    0.4 * df["XGB_Prediction"]
+    0.4 * df["LSTM_Prediction"]
 
 )
 
