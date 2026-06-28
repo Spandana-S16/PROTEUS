@@ -216,10 +216,8 @@ def run_pipeline():
 
     )
     copilot = GeminiCopilot(
-
-        api_key="AQ.Ab8RN6KvKuqW9UtuW030FBrPkVM_-DI_jcEuejs37pO3NwLFFg"
+        api_key=os.getenv("GEMINI_API_KEY")
     )
-
     ai_report = copilot.explain(
 
         stability,
