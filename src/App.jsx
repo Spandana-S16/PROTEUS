@@ -5,7 +5,7 @@ import ForecastChart from "./components/ForecastChart";
 import ModelContribution from "./components/ModelContribution";
 import SupplyChainHealth from "./components/SupplyChainHealth";
 import ScenarioSimulator from "./components/ScenarioSimulator";
-
+import ReactMarkdown from "react-markdown";
 function App() {
 
   const [backendData, setBackendData] = useState(null);
@@ -142,27 +142,62 @@ function App() {
             marginBottom: "15px",
           }}
         >
-          🧠 AI Executive Report
+           AI Executive Report
         </h2>
 
+        {backendData ? (
+  <ReactMarkdown
+    components={{
+      h1: ({children}) => (
+        <h1 style={{fontSize:"28px",marginBottom:"18px"}}>
+          {children}
+        </h1>
+      ),
+      h2: ({children}) => (
+        <h2 style={{fontSize:"24px",marginTop:"22px"}}>
+          {children}
+        </h2>
+      ),
+      h3: ({children}) => (
+        <h3 style={{fontSize:"20px",marginTop:"18px"}}>
+          {children}
+        </h3>
+      ),
+      p: ({children}) => (
         <p
           style={{
-            color: "#D1D5DB",
-            lineHeight: "1.8",
-            whiteSpace: "pre-wrap",
+            color:"#D1D5DB",
+            lineHeight:"1.9",
+            marginBottom:"14px"
           }}
         >
-          {backendData
-            ? backendData["ai executive report"]
-            :<div>
-  <h3> Running Adaptive Fusion...</h3>
-
-  <p>✓ Stability Analysis</p>
-  <p>✓ Regime Detection</p>
-  <p>✓ Forecast Generation</p>
-  <p>✓ AI Executive Report</p>
-</div>}
+          {children}
         </p>
+      ),
+      li: ({children}) => (
+        <li
+          style={{
+            marginBottom:"10px",
+            color:"#E5E7EB"
+          }}
+        >
+          {children}
+        </li>
+      )
+    }}
+  >
+    {backendData["ai executive report"]}
+  </ReactMarkdown>
+) : (
+  <div>
+    <h3> Running Adaptive Intelligence...</h3>
+
+    <p> Stability Analysis</p>
+    <p> Regime Detection</p>
+    <p> Forecast Generation</p>
+    <p> Executive Report Generation</p>
+  </div>
+)}
       </div>
     </div>
   );

@@ -13,14 +13,21 @@ function ForecastChart({ forecast }) {
 
   const base = forecast ? forecast * 0.82 : 85000;
 
+  const lastActual = base * 1.01;
+
   const data = [
     { week: "W1", actual: base * 0.94, forecast: null },
     { week: "W2", actual: base * 0.98, forecast: null },
     { week: "W3", actual: base * 1.02, forecast: null },
     { week: "W4", actual: base * 0.99, forecast: null },
     { week: "W5", actual: base * 1.03, forecast: null },
-    { week: "W6", actual: base * 1.01, forecast: null },
-    { week: "Forecast", actual: null, forecast: forecast || 0 },
+    { week: "W6", actual: lastActual, forecast: lastActual },
+
+    {
+      week: "Next Week",
+      actual: null,
+      forecast: forecast || lastActual,
+    },
   ];
 
   return (
@@ -51,11 +58,24 @@ function ForecastChart({ forecast }) {
 
           <XAxis dataKey="week" />
 
-          <YAxis />
+          <YAxis
+            tickFormatter={(value) => `${Math.round(value / 1000)}K`}
+          />
 
-          <Tooltip />
+          <Tooltip
+            formatter={(value) =>
+              value
+              ? `${Math.round(value).toLocaleString()} Units`
+              : "-"
+            }
+          />
 
-          <Legend />
+          <Legend
+            wrapperStyle={{
+            color: "white",
+            paddingTop: "10px",
+          }}
+          />
 
           <Line
             type="monotone"
@@ -69,7 +89,9 @@ function ForecastChart({ forecast }) {
             type="monotone"
             dataKey="forecast"
             stroke="#22C55E"
-            strokeWidth={4}
+            strokeWidth={5}
+            dot={{ r: 6 }}
+            activeDot={{ r: 8 }}
             strokeDasharray="5 5"
             name="AI Forecast"
           />

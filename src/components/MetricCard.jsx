@@ -14,7 +14,7 @@ function MetricCard({ title, value }) {
       color = "#EF4444";
     }
 
-  } else if (title === "Confidence") {
+  } else if (title === "Forecast reliability") {
 
     const score = parseFloat(value);
 
@@ -55,41 +55,52 @@ function MetricCard({ title, value }) {
   }
 
   return (
-    <div
+  <div
+    style={{
+      background: "#111827",
+      padding: "24px",
+      borderRadius: "18px",
+      minHeight: "130px",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
+      borderLeft: `6px solid ${color}`,
+      transition: "0.3s",
+    }}
+  >
+    <p
       style={{
-        background: "#111827",
-        padding: "24px",
-        borderRadius: "18px",
-        minHeight: "130px",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
-        border: `2px solid ${color}`,
-        transition: "all 0.3s ease",
-        cursor: "pointer",
+        color: "#9CA3AF",
+        fontSize: "15px",
+        marginBottom: "18px",
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: "1px",
       }}
     >
-      <p
-        style={{
-          color: "#9CA3AF",
-          fontSize: "14px",
-          marginBottom: "18px",
-          fontWeight: 500,
-        }}
-      >
-        {title}
-      </p>
+      {title}
+    </p>
 
-      <h1
-        style={{
-          fontSize: "36px",
-          margin: 0,
-          color: color,
-          fontWeight: 700,
-        }}
-      >
-        {value}
-      </h1>
-    </div>
-  );
+    <h1
+      style={{
+        fontSize: "38px",
+        margin: 0,
+        color: "white",
+        fontWeight: "700",
+      }}
+    >
+      {value}
+    </h1>
+
+    <div
+      style={{
+        marginTop: "16px",
+        width: "45px",
+        height: "5px",
+        background: color,
+        borderRadius: "10px",
+      }}
+    />
+  </div>
+);
 }
 
 export default MetricCard;
